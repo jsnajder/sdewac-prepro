@@ -28,6 +28,19 @@ executable sdewac-prepro
   hs-source-dirs:      src
   default-language:    Haskell2010
 
+executable sdewac-prepro-static
+  main-is:             sdewac-prepro.hs
+  -- other-modules:       
+  -- other-extensions:    
+  ghc-options:         -static -optl-pthread -optl-static
+  build-depends:       base ==4.*,
+                       containers ==0.5.*,
+                       conll-corpus ==0.1.*,
+                       text ==0.11.*,
+                       parseargs ==0.1.*
+  hs-source-dirs:      src
+  default-language:    Haskell2010
+
 executable conll2lemmadict
   main-is:             conll2lemmadict.hs
   -- other-modules:       
@@ -41,3 +54,16 @@ executable conll2lemmadict
   hs-source-dirs:      src
   default-language:    Haskell2010
 
+executable conll2lemmadict-static
+  main-is:             conll2lemmadict.hs
+  -- other-modules:       
+  -- other-extensions:    
+  ghc-options:         -static -optl-pthread -optl-static
+  build-depends:       base ==4.*,
+                       containers ==0.5.*,
+                       conll-corpus ==0.1.*,
+                       text ==0.11.*,
+                       parseargs ==0.1.*,
+                       counts ==0.1.*
+  hs-source-dirs:      src
+  default-language:    Haskell2010
