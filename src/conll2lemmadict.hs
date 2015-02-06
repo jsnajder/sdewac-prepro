@@ -21,6 +21,10 @@ import System.IO
 
 -- input is conll, one line per token
 
+readWordList :: FilePath -> IO (Set Text)
+readWordList f = 
+  S.fromList . map (head . T.words) . T.lines <$> T.readFile f
+
 mapping :: Set Text -> Text -> [(Text,Text)]
 mapping ws s = do
   t <- rights . map (parseLine . T.unpack) $ T.lines s
@@ -61,24 +65,25 @@ arg =
   , Arg 1 (Just 'r') (Just "reduce") Nothing 
       "run as hadoop reducer (reads from stdin)"
   , Arg 2 (Just 't') (Just "targets") 
-      (argDataOptional "filename" ArgtypeString) "targets list"
+      (argDataOptional "corpus" ArgtypeString)
+      "optional targets list"
   , Arg 3 Nothing Nothing  (argDataOptional "filename" ArgtypeString)
-      "CoNLL file" ]
+      "corpus in CoNLL format" ]
 
 main = do
   args <- parseArgsIO ArgsComplete arg
   hSetEncoding stdin utf8
   hSetEncoding stdout utf8
   ws <- case getArg args 2 of
-          f@(Just _) -> S.fromList . T.lines <$> readInput f
-          Nothing    -> return S.empty
+          Just f  -> readWordList f
+          Nothing -> return S.empty
   if gotArg args 0 then
     T.interact $ mrMap ws
   else if gotArg args 1 then
     T.interact $ mrReduce
   else if gotArg args 3 then do
     d <- mkDict . mapping ws <$> readInput (getArg args 3)
-    T.putStr . T.unlines . map (\(w,l) -> T.unwords [w,l]) $ M.toList d
+    T.putStr . T.unlines . map (\(w,l) -> T.concat [w,"\t",l]) $ M.toList d
   else usageError args "Missing input file."
   hFlush stdout
 
