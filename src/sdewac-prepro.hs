@@ -1,10 +1,17 @@
--- sdewac-mstparsed2lemmas.hs
--- Counts lemmas in MST/TT-parsed sDeWaC
--- (c) 2013 Jan Snajder
+-- sdewac-prepro.hs
+-- (c) 2015 Jan Snajder
+-- 
+-- Usage: sdewac-prepro <lemmas> <dict> <corpus> 
+-- Output: <lemma> <cpostag> <flag>
+--         where flag indicates what change has been made:
+--         P -- PTKVZ prefixation
+--         H -- dehyphenation
+--         B -- lemma backoff
+--
+-------------------------------------------------------------------------------
 
 import ConllReader
 import Control.Applicative
---import Control.Monad
 import Data.Char
 import Data.List
 import Data.Map (Map)
@@ -22,23 +29,6 @@ import System.IO
 type LemmaList = Set Text
 type LemmaDict = Map Text Text
 
-{-
-output: five columns:
- wordform lemma POS gender backoff-flag
-
-(1) Construct lemma list from MST-parsed corpus
-(2) Construct backoff dictionary from MATE-parsed corpus:
-    wordform+POS=>lemma+POS
-(3) Foreach MST sentence:
-    (3a) prefix PTKVZ if resulting prefix+verb exists in list from (1)
-    (3b) convert hyphenated lemmas to non-hyphenated variants, if such exist in (1)
-    (3c) if lemma==unknown, attempt backoff using dictionary from (2)
-
-Decide whether to do with:
-    * filter out invalid lemmas or lemma+pos combinations
-    * filter out invalid adjectives
--}
-
 data Flag = P | H | B | R deriving Show
 type TokenExt = (Token, Maybe Flag)
 
@@ -49,7 +39,7 @@ readLemmaList f =
 inList :: LemmaList -> LemmaPos -> Bool
 inList ls (l,p) = T.pack (l ++ posSep ++ p) `S.member` ls
 
--- PTKVZ - abgetrennter Verbzusatz
+-- PTKVZ (abgetrennter Verbzusatz)
 ptkvz = "PTKVZ"
 
 prefixPTKVZ :: LemmaList -> Sentence -> [TokenExt]
@@ -58,22 +48,23 @@ prefixPTKVZ ls s = map prefix ts
     ts = sentenceTokens s
     ps = M.fromList . map (\t -> (dephead t, t)) $
          filter ((==ptkvz) . postag) ts
-    prefix t | postag t == "V" = 
+    prefix t | cpostag t == "V" = 
                  case M.lookup (ix t) ps of
-                   Just p  ->
-                     (t { lemma = [ l' | p <- lemma p, l <- lemma t, 
-                          let l' = p++l, inList ls (l',cpostag t) ] }, Just P)
+                   Just p  -> let ls' = [l' | p <- lemma p, l <- lemma t,
+                                         let l' = p++l, inList ls (l',cpostag t) ]
+                              in if null ls' then (t,Nothing)
+                                 else (t { lemma = ls'}, Just P)
                    Nothing -> (t,Nothing)
              | otherwise = (t,Nothing)
 
--- dehyphneation
+-- dehyphenation
 dehyphenate :: LemmaList -> TokenExt -> TokenExt
 dehyphenate ls te@(t,_)
-  | changed   = (t,Just H)
+  | changed   = (t',Just H)
   | otherwise = te
   where t'    = t { lemma = [ deh l | l <- lemma t ] }
         deh l = let l' = removeHyphen l
-                in if l'/=l && inList ls (l',cpostag t) then l' else l
+                in if '-' `elem` l && inList ls (l',cpostag t) then l' else l
         changed = or $ zipWith (/=) (lemma t) (lemma t') 
 
 removeHyphen :: String -> String
@@ -107,7 +98,9 @@ preprocess ls d = map (map (lemmatize d . dehyphenate ls) . prefixPTKVZ ls)
 
 showTokenExt :: TokenExt -> String
 showTokenExt (t,f) = intercalate "\t" $ 
-  [intercalate "|" $ lemma t, cpostag t] ++ if isJust f then [show f] else []
+  [intercalate "|" $ lemma t, cpostag t] ++ case f of
+    Just f -> [show f]
+    Nothing -> []
 
 arg = 
   [ Arg 0 Nothing Nothing  (argDataRequired "lemmas" ArgtypeString)

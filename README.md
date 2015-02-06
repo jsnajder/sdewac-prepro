@@ -13,16 +13,15 @@ Install the [Haskell platform](https://www.haskell.org/platform/) and upgrade [C
 
 ## Preprocessing steps
 
+> ./bin/unlematized.sh sdewac-mst.sample.conll > sdewac-mst.sample.unlemmatized
 
-> ./unlematized.sh sdewac-mstparsed.sample.conll > sdewac-mstparsed.sample.unlemmatized
+> ../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
 
-> ../bin/conll2lemmadict -t sdewac-mstparsed.sample.unlemmatized sdewac-mateparsed.sample.conll > sdewac-mate.sample.lemmadict
-
-
-
+> ../bin/sdewac-prepro sdewac-mst.sample.lemmas sdewac-mate.sample.lemmadict sdewac-mst.sample.conll
 
 
-(1) Generale a list of unlemmatized wordforms (with POSes)
+
+(1) Generate a list of unlemmatized wordforms (with POSes)
 
 > ./unlematized.sh sdewac-mstparsed.sample.conll > sdewac-mstparsed.sample.unlemmatized
 
