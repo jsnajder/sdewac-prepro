@@ -1,24 +1,48 @@
 # sdewac-prepro
 
-2015-02-04
+*2015-02-06*
 
-This module implements [SdeWaC](http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/sdewac.en.html) preprocessing.
+This module implements some preprocessing for the
+[SdeWaC](http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/sdewac.en.html)
+corpus.
 
 ## Installation
 
-Install the [Haskell platform](https://www.haskell.org/platform/) and upgrade [Cabal](https://www.haskell.org/cabal/download.html) to the newest stable version.
+Install the `conll-tools` package by following [these
+steps](https://github.com/jsnajder/conll-corpus).
 
-> git clone https://github.com/jsnajder/sdewac-preprocessing
+Get the source:
 
+```
+$ git clone http://github.com/jsnajder/sdewac-prepro sdewac-prepro
+```
 
-## Preprocessing steps
+Then build from the source:
 
-> ./bin/unlematized.sh sdewac-mst.sample.conll > sdewac-mst.sample.unlemmatized
+```
+$ cd sdewac-prepro
+$ cabal sandbox init
+$ cabal sandbox add-source ../counts
+$ cabal sandbox add-source ../conll-corpus
+$ cabal install --only-dependencies
+$ cabal configure
+$ cabal install --bindir=bin
+```
 
-> ../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
+## Usage example
 
-> ../bin/sdewac-prepro sdewac-mst.sample.lemmas sdewac-mate.sample.lemmadict sdewac-mst.sample.conll
+```
+$ cd data
+$ ../bin/unlematized.sh sdewac-mst.sample.conll > sdewac-mst.sample.unlemmatized
+```
 
+```
+../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
+```
+
+```
+../bin/sdewac-prepro sdewac-mst.sample.lemmas sdewac-mate.sample.lemmadict sdewac-mst.sample.conll
+```
 
 
 (1) Generate a list of unlemmatized wordforms (with POSes)
