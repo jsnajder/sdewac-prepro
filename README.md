@@ -69,7 +69,7 @@ list of lemmas and the lemmatization dictionary as input:
 The preprocessing does three things:
 
 * prefixes PTKVZ (*abgetrennter Verbzusatz*) to a verb lemma, provided the
-  resulting prefix+verb exists in lemma list
+  resulting prefix+verb exists in the lemma list
 
 * converts a hyphenated lemma to its non-hyphenated version, provided the
   non-hyphenated version exist in the lemma list
