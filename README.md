@@ -51,9 +51,10 @@ from MATE-parsed sDeWac:
 ../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
 ```
 
-The above can be run as via Hadoop Map/Reduce streaming, by using `-m` and `-r`
-flags for the mapper and reducer, respectively. The following simulates
-Map/Reduce streaming:
+The above can be run via [Hadoop Map/Reduce
+streaming](http://hadoop.apache.org/docs/r1.2.1/streaming.html#Hadoop+Streaming),
+by using `-m` and `-r` flags for the mapper and reducer, respectively. The
+following simulates this:
 
 ```
 ../bin/conll2lemmadict -m -t sdewac-mst.sample.unlemmatized < sdewac-mate.sample.conll | sort | ../bin/conll2lemmadict -r > sdewac-mate.sample.lemmadict
