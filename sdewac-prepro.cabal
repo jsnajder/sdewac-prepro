@@ -20,7 +20,7 @@ executable sdewac-prepro
   main-is:             sdewac-prepro.hs
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.6 && <4.7,
+  build-depends:       base ==4.*,
                        containers ==0.5.*,
                        conll-corpus ==0.1.*,
                        text ==0.11.*,
@@ -32,7 +32,7 @@ executable conll2lemmadict
   main-is:             conll2lemmadict.hs
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.*,
+  build-depends:       base ==4.*,
                        containers ==0.5.*,
                        conll-corpus ==0.1.*,
                        text ==0.11.*,
