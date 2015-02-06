@@ -1,3 +1,8 @@
+-- conll2lemmadict.hs
+-- (c) 2015 Jan Snajder
+-- 
+-------------------------------------------------------------------------------
+
 {-# LANGUAGE OverloadedStrings #-}
 
 import ConllReader
@@ -18,8 +23,6 @@ import qualified Data.Text.IO as T
 import System.Console.ParseArgs
 import System.Environment
 import System.IO
-
--- input is conll, one line per token
 
 readWordList :: FilePath -> IO (Set Text)
 readWordList f = 
