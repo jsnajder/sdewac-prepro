@@ -2,7 +2,7 @@
 
 *2015-02-06*
 
-This module implements some preprocessing for the
+This package implements some preprocessing for the
 [SdeWaC](http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/sdewac.en.html)
 corpus.
 
@@ -31,40 +31,57 @@ $ cabal install --bindir=bin
 
 ## Usage example
 
+First, let's fix CoNLL format of the MATE-parsed sDeWaC:
+
 ```
 $ cd data
-$ ../bin/unlematized.sh sdewac-mst.sample.conll > sdewac-mst.sample.unlemmatized
+$ ../bin/fix-mate-conll.sh sdewac-mate.sample.conll-bogus > sdewac-mate.sample.conll
 ```
+
+Get a `wordform_POS` list of unlemmatized words from MST-parsed sDeWac:
+
+```
+$ ../bin/unlemmatized.sh sdewac-mst.sample.conll > sdewac-mst.sample.unlemmatized
+```
+
+Generate a lemmatization dictionary (a `wordform_POS` => `lemma_POS` mapping)
+from MATE-parsed sDeWac:
 
 ```
 ../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
 ```
 
+The above can be run as via Hadoop Map/Reduce streaming, by using `-m` and `-r`
+flags for the mapper and reducer, respectively. The following simulates
+Map/Reduce streaming:
+
+```
+../bin/conll2lemmadict -m -t sdewac-mst.sample.unlemmatized < sdewac-mate.sample.conll | sort | ../bin/conll2lemmadict -r > sdewac-mate.sample.lemmadict
+```
+
+Finally, we run the preprocessing of the MST-parsed sDeWac corpus, providing a
+list of lemmas and the lemmatization dictionary as input:
+
 ```
 ../bin/sdewac-prepro sdewac-mst.sample.lemmas sdewac-mate.sample.lemmadict sdewac-mst.sample.conll
 ```
 
+The preprocessing does three things:
 
-(1) Generate a list of unlemmatized wordforms (with POSes)
+* prefixes PTKVZ (*abgetrennter Verbzusatz*) to a verb lemma, provided the
+  resulting prefix+verb exists in lemma list
 
-> ./unlematized.sh sdewac-mstparsed.sample.conll > sdewac-mstparsed.sample.unlemmatized
+* converts a hyphenated lemma to its non-hyphenated version, provided the
+  non-hyphenated version exist in the lemma list
 
-  * generate a list of wordforms that have not been lemmatized (for which the lemma is `<unknown>`) in mst-parsed sdewac
-  * add counts from sdewac-mst to these worforms
-  * filter the list based on frequency (discard wordform occurring less than a certain number of times times)
+* if the lemmatization failed (the lemma is `<unknown>`), attempts backoff
+  lemmatization using the lemmatization dictionary
 
-* Step 2:
-  * generate a lemmatization dictionary (essentially a wordform_POS ⇒ lemma_POS mapping) from mate-parsed sdewac for unknown wordforms from Step 1
-  * `$ conll2lemmadict sdewac-mate.conll sdewac-mst-unknown-wordforms.txt > sdewac-mate-lemmadict.txt`
+The output is a vertical list of `(lemma, POS, flag)` triplets, aligned with
+the input corpus. The flag indicates what change has been made to the lemma, if
+any:
 
-* Step 3:
-  * generate a frequency list of lemma_POS from mst-parsed sdewac
-  * `$ conll2counts sdewac-mst.conll > sdewac-mst-lemmacounts.txt`
-
-* Step 4:
-  * for each mst-parsed sdewac sentence:
-    (4a) prefix PTKVZ if resulting prefix+verb exists in sdewac-mst-lemmacounts.txt
-    (4b) convert hyphenated lemmas to non-hyphenated variants, if such exist in sdewac-mst-lemmacounts.txt
-    (4c) if lemmais unknown, attempt backoff using sdewac-mate-lemmadict
-  * `$ sdewac-prepro sdewac-mst.conll sdewac-mst-lemmacounts.txt sdewac-mate-lemmadict.txt > sdewac-preprocessed.conll`
+* `P` -- PTKVZ prefixation
+* `H` -- dehyphenation
+* `B` -- lemma backoff
 
