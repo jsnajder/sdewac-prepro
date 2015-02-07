@@ -31,21 +31,21 @@ $ cabal install --bindir=bin
 
 ## Usage example
 
-First, let's fix CoNLL format of the MATE-parsed sDeWaC:
+First, let's fix CoNLL format of the MATE-parsed SdeWaC:
 
 ```
 $ cd data
 $ ../bin/fix-mate-conll.sh sdewac-mate.sample.conll-bogus > sdewac-mate.sample.conll
 ```
 
-Get a `wordform_POS` list of unlemmatized words from MST-parsed sDeWac:
+Get a `wordform_POS` list of unlemmatized words from MST-parsed SdeWac:
 
 ```
 $ ../bin/unlemmatized.sh sdewac-mst.sample.conll > sdewac-mst.sample.unlemmatized
 ```
 
 Generate a lemmatization dictionary (a `wordform_POS` => `lemma_POS` mapping)
-from MATE-parsed sDeWac:
+from MATE-parsed SdeWac:
 
 ```
 ../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
@@ -60,7 +60,7 @@ following simulates this:
 ../bin/conll2lemmadict -m -t sdewac-mst.sample.unlemmatized < sdewac-mate.sample.conll | sort | ../bin/conll2lemmadict -r > sdewac-mate.sample.lemmadict
 ```
 
-Finally, we run the preprocessing of the MST-parsed sDeWac corpus, providing a
+Finally, we run the preprocessing of the MST-parsed SdeWac corpus, providing a
 list of lemmas and the lemmatization dictionary as input:
 
 ```
@@ -70,13 +70,18 @@ list of lemmas and the lemmatization dictionary as input:
 The preprocessing does three things:
 
 * prefixes PTKVZ (*abgetrennter Verbzusatz*) to a verb lemma, provided the
-  resulting prefix+verb exists in the lemma list
+  resulting prefix+verb exists in the lemma list;
 
 * converts a hyphenated lemma to its non-hyphenated version, provided the
-  non-hyphenated version exist in the lemma list
+  non-hyphenated version occurs more frequent in the lemma list. If
+  POS is "T"`, which is typicla of suspended hyphenation, an attempt is made 
+  to replace the POS with the most frequent POS for this lemma from the lemma 
+  list;
 
 * if the lemmatization failed (the lemma is `<unknown>`), attempts backoff
-  lemmatization using the lemmatization dictionary
+  lemmatization using the lemmatization dictionary. The dictionary is queried
+  for `wordform_POS` first, than the same wordform is tried with other POS-es,
+  and finally uppercased wordform is tried with the original POS.
 
 The output is a vertical list of `(lemma, POS, flag)` triplets, aligned with
 the input corpus. The flag indicates what change has been made to the lemma, if
@@ -84,5 +89,8 @@ any:
 
 * `P` -- PTKVZ prefixation
 * `H` -- dehyphenation
+* `Hp` -- dehyphenation + POS change
 * `B` -- lemma backoff
+* `Bp` -- lemma backoff + POS change
+* `Bc` -- lemma backoff + case change
 
