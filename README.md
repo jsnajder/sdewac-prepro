@@ -82,7 +82,7 @@ The preprocessing does three things:
 
 * if the lemmatization failed (the lemma is `<unknown>`), attempts backoff
   lemmatization using the lemmatization dictionary. The dictionary is queried
-  for `wordform_POS` first, than the same wordform is tried with other POS-es,
+  for `wordform_POS` first, then the same wordform is tried with other POS-es,
   and finally uppercased wordform is tried with the original POS.
 
 The output is a vertical list of `(lemma, POS, flag)` triplets, aligned with
