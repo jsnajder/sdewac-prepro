@@ -1,6 +1,6 @@
 # sdewac-prepro
 
-*2015-02-06*
+*2015-02-07*
 
 This package implements some preprocessing for the
 [SdeWaC](http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/sdewac.en.html)
@@ -38,14 +38,15 @@ $ cd data
 $ ../bin/fix-mate-conll.sh sdewac-mate.sample.conll-bogus > sdewac-mate.sample.conll
 ```
 
-Get a `wordform_POS` list of unlemmatized words from MST-parsed SdeWac:
+Get a word list of unlemmatized words from MST-parsed SdeWaC (only wordforms
+without POS-es):
 
 ```
 $ ../bin/unlemmatized.sh sdewac-mst.sample.conll > sdewac-mst.sample.unlemmatized
 ```
 
 Generate a lemmatization dictionary (a `wordform_POS` => `lemma_POS` mapping)
-from MATE-parsed SdeWac:
+from MATE-parsed SdeWaC:
 
 ```
 ../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
@@ -60,11 +61,12 @@ following simulates this:
 ../bin/conll2lemmadict -m -t sdewac-mst.sample.unlemmatized < sdewac-mate.sample.conll | sort | ../bin/conll2lemmadict -r > sdewac-mate.sample.lemmadict
 ```
 
-Finally, we run the preprocessing of the MST-parsed SdeWac corpus, providing a
+Finally, we run the preprocessing of the MST-parsed SdeWaC corpus, providing a
 list of lemmas and the lemmatization dictionary as input:
 
 ```
-../bin/sdewac-prepro sdewac-mst.sample.lemmas sdewac-mate.sample.lemmadict sdewac-mst.sample.conll
+../bin/sdewac-prepro sdewac-mst.sample.lemmas sdewac-mate.sample.lemmadict sdewac-mst.sample.conll > prepro
+paste sdewac-mst.sample.conll prepro > sdewac-mst.sample.prepro
 ```
 
 The preprocessing does three things:
@@ -74,7 +76,7 @@ The preprocessing does three things:
 
 * converts a hyphenated lemma to its non-hyphenated version, provided the
   non-hyphenated version occurs more frequent in the lemma list. If
-  POS is "T"`, which is typicla of suspended hyphenation, an attempt is made 
+  POS is "T"`, which is typical for suspended hyphenation, an attempt is made 
   to replace the POS with the most frequent POS for this lemma from the lemma 
   list;
 
@@ -93,4 +95,5 @@ any:
 * `B` -- lemma backoff
 * `Bp` -- lemma backoff + POS change
 * `Bc` -- lemma backoff + case change
+* `X` -- no change
 

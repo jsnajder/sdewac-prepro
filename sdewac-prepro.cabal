@@ -23,6 +23,7 @@ executable sdewac-prepro
   build-depends:       base ==4.*,
                        containers ==0.5.*,
                        conll-corpus ==0.1.*,
+                       counts ==0.1.*,
                        text ==0.11.*,
                        parseargs ==0.1.*
   hs-source-dirs:      src

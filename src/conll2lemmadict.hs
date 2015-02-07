@@ -31,11 +31,10 @@ readWordList f =
 mapping :: Set Text -> Text -> [(Text,Text)]
 mapping ws s = do
   t <- rights . map (parseLine . T.unpack) $ T.lines s
-  let wp = form t ++ posSep ++ cpostag t
-  guard $ if S.null ws then True else T.pack wp `S.member` ws
+  guard $ if S.null ws then True else T.pack (form t) `S.member` ws
   l <- lemma t
-  (p:_) <- [cpostag t]
-  let lp = l ++ posSep ++ [p]
+  let lp = l ++ posSep ++ cpostag t
+      wp = form t ++ posSep ++ cpostag t
   return (T.pack wp, T.pack lp)
 
 mkDict :: [(Text,Text)] -> Map Text Text

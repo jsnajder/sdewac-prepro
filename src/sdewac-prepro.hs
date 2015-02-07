@@ -21,8 +21,6 @@ import Data.Map (Map)
 import qualified Data.Map as M
 import Data.Maybe (fromJust, isJust)
 import Control.Monad (msum)
---import Data.Set (Set)
---import qualified Data.Set as S
 import Data.Text (Text)
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
