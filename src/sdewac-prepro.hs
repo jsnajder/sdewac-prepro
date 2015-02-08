@@ -54,9 +54,12 @@ moreFrequent ls l1 l2 =
 poses = map (:[]) "ACFKNPTV"
 
 -- Returns the most frequent lemma_POS for a given lemma
-mostFrequentPos :: LemmaList -> String -> LemmaPos
-mostFrequentPos ls l = maximumBy (compare `on` lemmaFreq ls) lx
+mostFrequentPos :: LemmaList -> String -> Maybe String
+mostFrequentPos ls l 
+  | lemmaFreq ls (l,p) > 0 = Just p
+  | otherwise              = Nothing
   where lx = map (l,) poses
+        p  = snd $ maximumBy (compare `on` lemmaFreq ls) lx
 
 -- PTKVZ (abgetrennter Verbzusatz)
 ptkvz = "PTKVZ"
@@ -88,10 +91,11 @@ dehyphenate ls te@(t,_)
         posCh   = cpostag t /= cpostag t'
  
 deh :: LemmaList -> LemmaPos -> LemmaPos
-deh ls (l,p) | l /= l' && p == "T" = mostFrequentPos ls l'
+deh ls (l,p) | l /= l' && p == "T" && isJust p' = (l',fromJust p')
              | l /= l'             = moreFrequent ls (l',p) (l,p) 
              | otherwise           = (l,p)
   where l' = removeHyphen l
+        p' = mostFrequentPos ls l'
 
 removeHyphen :: String -> String
 removeHyphen l | '-' `elem` l = remove l

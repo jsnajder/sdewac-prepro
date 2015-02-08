@@ -49,7 +49,7 @@ Generate a lemmatization dictionary (a `wordform_POS` => `lemma_POS` mapping)
 from MATE-parsed SdeWaC:
 
 ```
-../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
+$ ../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
 ```
 
 The above can be run via [Hadoop Map/Reduce
@@ -58,15 +58,15 @@ by using `-m` and `-r` flags for the mapper and reducer, respectively. The
 following simulates this:
 
 ```
-../bin/conll2lemmadict -m -t sdewac-mst.sample.unlemmatized < sdewac-mate.sample.conll | sort | ../bin/conll2lemmadict -r > sdewac-mate.sample.lemmadict
+$ ../bin/conll2lemmadict -m -t sdewac-mst.sample.unlemmatized < sdewac-mate.sample.conll | sort | ../bin/conll2lemmadict -r > sdewac-mate.sample.lemmadict
 ```
 
 Finally, we run the preprocessing of the MST-parsed SdeWaC corpus, providing a
 list of lemmas and the lemmatization dictionary as input:
 
 ```
-../bin/sdewac-prepro sdewac-mst.sample.lemmas sdewac-mate.sample.lemmadict sdewac-mst.sample.conll > prepro
-paste sdewac-mst.sample.conll prepro > sdewac-mst.sample.prepro
+$ ../bin/sdewac-prepro sdewac-mst.sample.lemmas sdewac-mate.sample.lemmadict sdewac-mst.sample.conll > prepro
+$ paste sdewac-mst.sample.conll prepro > sdewac-mst.sample.prepro
 ```
 
 The preprocessing does three things:
