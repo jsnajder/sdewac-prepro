@@ -761,7 +761,7 @@
 62	vorhandener	vorhanden	A	ADJA	-	63	NK	-	-	vorhanden	A	X
 63	Arbeitsplätze	Arbeitsplatz	N	NN	-	61	AG	-	-	Arbeitsplatz	N	X
 64	und	und	K	KON	-	63	CD	-	-	und	K	X
-65	-abläufe	<unknown>	N	NN	-	63	CJ	-	-	Ablauf	N	Bc
+65	-abläufe	<unknown>	N	NN	-	63	CJ	-	-	ablauf	N	Bc
 66	,	,	$	$,	-	67	PUNC	-	-	,	$	X
 67	Einführung	Einführung	N	NN	-	61	CJ	-	-	Einführung	N	X
 68	neuer	neu	A	ADJA	-	69	NK	-	-	neu	A	X
@@ -963,7 +963,7 @@
 37	polizeiliche	polizeilich	A	ADJA	-	38	NK	-	-	polizeilich	A	X
 38	Verbrechensvorbeugung	Verbrechensvorbeugung	N	NN	-	34	NK	-	-	Verbrechensvorbeugung	N	X
 39	und	und	K	KON	-	38	CD	-	-	und	K	X
-40	-bekämpfung	<unknown>	N	NN	-	38	CJ	-	-	-bekämpfung	N	B
+40	-bekämpfung	<unknown>	N	NN	-	38	CJ	-	-	bekämpfung	N	Bc
 41	385	@card@	C	CARD	-	40	NK	-	-	@card@	C	X
 42	aus	aus	P	PTKVZ	-	15	SVP	-	-	aus	P	X
 43	,	,	$	$,	-	15	PUNC	-	-	,	$	X

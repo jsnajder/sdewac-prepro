@@ -8,8 +8,7 @@ corpus.
 
 ## Installation
 
-Install the
-[`conll-tools`](https://github.com/jsnajder/conll-corpus#installation).
+Install the [`conll-tools`](https://github.com/jsnajder/conll-corpus).
 package by following [these
 steps](https://github.com/jsnajder/conll-corpus#installation).
 
