@@ -43,7 +43,7 @@ Next, use `conll2counts` from the `conll-corpus` package to generate a
 list of lemmas and their frequencies from MST-parsed SdeWaC:
 
 ```
-$ ../bin/conll2counts -p sdewac-mst.sample.conll > sdewac-mst.sample.lemmas
+$ ../bin/conll2counts -l -p sdewac-mst.sample.conll > sdewac-mst.sample.lemmas
 ```
 
 Note that the above can be run via Hadoop Map/Reduce streaming; check out
