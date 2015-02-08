@@ -38,31 +38,36 @@ $ cd data
 $ ../bin/fix-mate-conll.sh sdewac-mate.sample.conll-bogus > sdewac-mate.sample.conll
 ```
 
-Get a word list of unlemmatized words from MST-parsed SdeWaC (only wordforms
-without POS-es):
+Next, use `conll2counts` from the `conll-corpus` package to generate a
+list of lemmas and their frequencies from MST-parsed SdeWaC:
+
+```
+$ ../bin/conll2counts -p sdewac-mst.sample.conll > sdewac-mst.sample.lemmas
+```
+
+Note that the above can be run via Hadoop Map/Reduce streaming; check out
+`conll-corpus` documentation for an example.
+
+Next, get a word list of unlemmatized words from MST-parsed SdeWaC (only
+wordforms without POS-es):
 
 ```
 $ ../bin/unlemmatized.sh sdewac-mst.sample.conll > sdewac-mst.sample.unlemmatized
 ```
 
-Generate a lemmatization dictionary (a `wordform_POS` => `lemma_POS` mapping)
-from MATE-parsed SdeWaC:
+Next, generate a lemmatization dictionary (a `wordform_POS` => `lemma_POS`
+mapping) for the unlemmatized words by running `conll2lemmadict` from the
+`conll-corpus` package on the MATE-parsed SdeWaC corpus:
 
 ```
 $ ../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
 ```
 
-The above can be run via [Hadoop Map/Reduce
-streaming](http://hadoop.apache.org/docs/r1.2.1/streaming.html#Hadoop+Streaming),
-by using `-m` and `-r` flags for the mapper and reducer, respectively. The
-following simulates this:
+Again, note that the above can be run via Hadoop Map/Reduce streaming;
+check out `conll-corpus` documentation for an example.
 
-```
-$ ../bin/conll2lemmadict -m -t sdewac-mst.sample.unlemmatized < sdewac-mate.sample.conll | sort | ../bin/conll2lemmadict -r > sdewac-mate.sample.lemmadict
-```
-
-Finally, we run the preprocessing of the MST-parsed SdeWaC corpus, providing a
-list of lemmas and the lemmatization dictionary as input:
+Finally, run the preprocessing of the MST-parsed SdeWaC corpus, providing
+a list of lemmas and the lemmatization dictionary as input:
 
 ```
 $ ../bin/sdewac-prepro sdewac-mst.sample.lemmas sdewac-mate.sample.lemmadict sdewac-mst.sample.conll > prepro
@@ -86,8 +91,8 @@ The preprocessing does three things:
   and finally uppercased wordform is tried with the original POS.
 
 The output is a vertical list of `(lemma, POS, flag)` triplets, aligned with
-the input corpus. The flag indicates what change has been made to the lemma, if
-any:
+the input corpus. The flag indicates what change has been made to the lemma,
+if any:
 
 * `P` -- PTKVZ prefixation
 * `H` -- dehyphenation

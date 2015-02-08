@@ -10,7 +10,7 @@
 --
 -------------------------------------------------------------------------------
 
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE TupleSections, OverloadedStrings #-}
 
 import ConllReader
 import Control.Applicative
@@ -29,7 +29,7 @@ import System.Exit
 import System.IO
 
 type LemmaList = Map Text Int
-type LemmaDict = Map Text Text
+type LemmaDict = Map (Text,Text) (Text,Text)
 
 data Flag = P | H | Hp | B | Bp | Bc | X deriving Show
 type TokenExt = (Token, Flag)
@@ -61,7 +61,10 @@ mostFrequentPos ls l
   where lx = map (l,) poses
         p  = snd $ maximumBy (compare `on` lemmaFreq ls) lx
 
--- PTKVZ (abgetrennter Verbzusatz)
+-------------------------------------------------------------------------------
+-- PTKVZ (abgetrennter Verbzusatz) prefixation
+-------------------------------------------------------------------------------
+
 ptkvz = "PTKVZ"
 
 prefixPTKVZ :: LemmaList -> Sentence -> [TokenExt]
@@ -79,7 +82,10 @@ prefixPTKVZ ls s = map prefix ts
                    Nothing -> (t, X)
              | otherwise = (t, X)
 
--- dehyphenation
+-------------------------------------------------------------------------------
+-- Dehyphenation
+-------------------------------------------------------------------------------
+
 dehyphenate :: LemmaList -> TokenExt -> TokenExt
 dehyphenate ls te@(t,_)
   | lemma t /= [] && lemmaCh = (t', if posCh then Hp else H)
@@ -103,20 +109,37 @@ removeHyphen l | '-' `elem` l = remove l
   where remove []     = []
         remove (x:xs) = x : filter (/='-') (map toLower xs)
 
--- lemmatization backoff
+-------------------------------------------------------------------------------
+-- Lemmatization backoff
+-------------------------------------------------------------------------------
+
+-- Reads in the lemmatization dictionary. Ignores lemmas that are 
+-- "not good", as defined by the predicate below. Also removes the 
+-- initial hyphens from lemmas.
 readLemmaDict :: FilePath -> IO LemmaDict
-readLemmaDict f = M.fromList . map parse . T.lines <$> T.readFile f
-  where parse s = case T.words s of
-          (w:l:_) -> (w,l)
-          _       -> error "no parse"
+readLemmaDict f = 
+  M.fromList . filter (goodLP . snd) . map parse . T.lines <$> T.readFile f
+  where parse s = case T.split (`elem` "\t_") s of
+          (w:p1:l:p2:_) -> ((w,p1),(removeInitHyphen l,p2))
+          _             -> error "no parse"
+
+goodLP :: (Text,Text) -> Bool
+goodLP (l,p) =
+  ((p/="V") || (lowercased && any (`T.isSuffixOf` l) ["en","eln","ern"])) &&
+  ((p/="A") || lowercased) &&
+  (T.length l > 1)
+  where lowercased = isLower $ T.head l
+
+removeInitHyphen :: Text -> Text
+removeInitHyphen l | T.head l == '-' = T.tail l
+                   | otherwise       = l
 
 type WordPos = LemmaPos
 
 lemmaDictLookup :: LemmaDict -> WordPos -> Maybe LemmaPos
-lemmaDictLookup d (w,p) = case M.lookup (T.pack $ w ++ posSep ++ p) d of
-  Just lp -> case break (=='_') $ T.unpack lp of
-               (l,_:p) -> Just (l,p)
-  Nothing -> Nothing
+lemmaDictLookup d (w,p) = case M.lookup (T.pack w, T.pack p) d of
+  Just (l,p) -> Just (T.unpack l, T.unpack p)
+  Nothing    -> Nothing
 
 -- try to back off to lemmatization dictiornay: 
 -- first try original wordform_POS, then try other
