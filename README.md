@@ -1,6 +1,6 @@
 # sdewac-prepro
 
-*2015-02-07*
+*2015-02-08*
 
 This package implements some preprocessing for the
 [SdeWaC](http://www.ims.uni-stuttgart.de/forschung/ressourcen/korpora/sdewac.en.html)

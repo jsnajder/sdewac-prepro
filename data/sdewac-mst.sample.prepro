@@ -761,7 +761,7 @@
 62	vorhandener	vorhanden	A	ADJA	-	63	NK	-	-	vorhanden	A	X
 63	Arbeitsplätze	Arbeitsplatz	N	NN	-	61	AG	-	-	Arbeitsplatz	N	X
 64	und	und	K	KON	-	63	CD	-	-	und	K	X
-65	-abläufe	<unknown>	N	NN	-	63	CJ	-	-	-ablauf	N	B
+65	-abläufe	<unknown>	N	NN	-	63	CJ	-	-	Ablauf	N	Bc
 66	,	,	$	$,	-	67	PUNC	-	-	,	$	X
 67	Einführung	Einführung	N	NN	-	61	CJ	-	-	Einführung	N	X
 68	neuer	neu	A	ADJA	-	69	NK	-	-	neu	A	X
@@ -805,7 +805,7 @@
 106	,	,	$	$,	-	105	PUNC	-	-	,	$	X
 107	Erstellung	Erstellung	N	NN	-	97	CJ	-	-	Erstellung	N	X
 108	von	von	A	APPR	-	107	PG	-	-	von	A	X
-109	Notfall-	Notfall-	T	TRUNC	-	111	CJ	-	-	Notfall	V	Hp
+109	Notfall-	Notfall-	T	TRUNC	-	111	CJ	-	-	Notfall-	T	X
 110	und	und	K	KON	-	111	CD	-	-	und	K	X
 111	Alarmplänen	<unknown>	N	NN	-	108	NK	-	-	Alarmplan	N	B
 112	.	.	$	$.	-	14	PUNC	-	-	.	$	X
@@ -1010,11 +1010,11 @@
 84	von	von	A	APPR	-	83	PG	-	-	von	A	X
 85	Falschgeld	Falschgeld	N	NN	-	84	NK	-	-	Falschgeld	N	X
 86	,	,	$	$,	-	85	PUNC	-	-	,	$	X
-87	Eigentums-	Eigentums-	T	TRUNC	-	89	CJ	-	-	Eigentums	V	Hp
+87	Eigentums-	Eigentums-	T	TRUNC	-	89	CJ	-	-	Eigentums-	T	X
 88	und	und	K	KON	-	89	CD	-	-	und	K	X
 89	Vermögensstraftaten	Vermögensstraftat	N	NN	-	85	CJ	-	-	Vermögensstraftat	N	X
 90	,	,	$	$,	-	60	PUNC	-	-	,	$	X
-91	Scheck-	Scheck-	T	TRUNC	-	93	CJ	-	-	Scheck	V	Hp
+91	Scheck-	Scheck-	T	TRUNC	-	93	CJ	-	-	Scheck-	T	X
 92	und	und	K	KON	-	93	CD	-	-	und	K	X
 93	Kreditkartenfälschung	Kreditkartenfälschung	N	NN	-	60	CJ	-	-	Kreditkartenfälschung	N	X
 94	,	,	$	$,	-	60	PUNC	-	-	,	$	X
@@ -1757,7 +1757,7 @@
 39	Jahre	Jahr	N	NN	-	35	NK	-	-	Jahr	N	X
 40	wegen	wegen	A	APPR	-	45	MO	-	-	wegen	A	X
 41	einer	ein	A	ART	-	40	NK	-	-	ein	A	X
-42	Steuer-	Steuer-	T	TRUNC	-	44	CJ	-	-	Steuer	V	Hp
+42	Steuer-	Steuer-	T	TRUNC	-	44	CJ	-	-	Steuer-	T	X
 43	oder	oder	K	KON	-	44	CD	-	-	oder	K	X
 44	Monopolstraftat	<unknown>	N	NN	-	40	NK	-	-	Monopolstraftat	N	B
 45	verurteilt	verurteilen	V	VVPP	-	46	OC	-	-	verurteilen	V	X
