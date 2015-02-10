@@ -54,6 +54,7 @@ wordforms without POS-es):
 
 ```
 $ ../bin/unlemmatized.sh sdewac-mst.sample.conll > sdewac-mst.sample.unlemmatized
+$ ../bin/filter-unlemmatized.sh sdewac-mst.sample.unlemmatized > sdewac-mst.sample.unlemmatized.filtered
 ```
 
 Next, generate a lemmatization dictionary (a `wordform_POS` => `lemma_POS`
@@ -61,7 +62,7 @@ mapping) for the unlemmatized words by running `conll2lemmadict` from the
 `conll-corpus` package on the MATE-parsed SdeWaC corpus:
 
 ```
-$ ../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
+$ ../bin/conll2lemmadict -t sdewac-mst.sample.unlemmatized.filtered sdewac-mate.sample.conll > sdewac-mate.sample.lemmadict
 ```
 
 Again, note that the above can be run via Hadoop Map/Reduce streaming;
